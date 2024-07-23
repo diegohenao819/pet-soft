@@ -1,10 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-
-    //acept images https://bytegrad.com/course-assets/react-nextjs/petsoft-preview.png
-    images: {
-        domains: ['bytegrad.com'],   
-    },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'bytegrad.com',
+        
+      },
+      {
+        protocol: 'https',
+        hostname: 'thumbs.dreamstime.com',
+        
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        
+      },
+    ],
+  },
 };
 
 export default nextConfig;

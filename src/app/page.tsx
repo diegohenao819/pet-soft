@@ -1,5 +1,7 @@
 import { Logo } from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -13,12 +15,24 @@ export default function Home() {
 
       <div className="w-[30%]">
         <Logo />
-        <h1 className="text-4xl font-bold"
-        >
-         Manage your <span className="font-extrabold">pet daycare</span> with ease
+        <h1 className="text-4xl font-bold mt-2">
+          Manage your <span className="font-extrabold">pet daycare</span> with
+          ease
         </h1>
-        <p className=" mt-2"
-        > Use PetSoft to easily keep track of pets under your care. Get lifetime access for $59.</p>
+        <p className=" mt-2">
+          Use PetSoft to easily keep track of pets under your care. Get lifetime
+          access for $59.
+        </p>
+
+        <div className="mt-4 space-x-4">
+          <Button asChild>
+            <Link href="/signup"> Get started </Link>
+          </Button>
+
+          <Button variant="secondary" asChild>
+            <Link href="/login"> Log in </Link>
+          </Button>
+        </div>
       </div>
     </main>
   );
