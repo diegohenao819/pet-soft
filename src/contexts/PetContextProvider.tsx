@@ -15,18 +15,23 @@ type PetContextProviderProps = {
 type ValuesPetContextProviderProps = {
   pets: PetType[];
   selectedPetId: String | null;
-  setSelectedPetId: (id: String) => void;
+  handlePetIdChange: (id: String) => void;
 };
 
 const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
   const [pets, setPets] = useState<PetType[]>(data);
   const [selectedPetId, setSelectedPetId] = useState<String | null>(null);
 
+  //   Derived states
+  const handlePetIdChange = (id: String) => {
+    setSelectedPetId(id);
+  };
+
   return (
     <PetContext.Provider
       value={{
         pets,
-        setSelectedPetId,
+        handlePetIdChange,
         selectedPetId,
       }}
     >

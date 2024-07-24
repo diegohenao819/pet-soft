@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const PetList = () => {
-  const { pets, selectedPetId } = usePetContext() || {
+  const { pets, selectedPetId, handlePetIdChange } = usePetContext() || {
     pets: [],
     selectedPetId: null,
+    handlePetIdChange: () => {},
   };
 
   return (
@@ -21,7 +22,10 @@ const PetList = () => {
                 "flex items-center h-[70px] w-full cursor-pointer px-5 text-base gap-3 hover:bg-[#EFF1F2] focus:bg-[#EFF1F2] transition",
                 selectedPetId === pet.id && "bg-[#EFF1F2]"
               )}
+              onClick={() => handlePetIdChange(pet.id)}
             >
+        
+           
               <Image
                 src={pet.imageUrl}
                 width={45}
