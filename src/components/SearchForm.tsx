@@ -3,7 +3,7 @@
 import { useSearchContext } from "@/lib/hooks";
 
 const SearchForm = () => {
-  const { searchQuery, setSearchQuery } = useSearchContext();
+  const { searchQuery, handleSearchQueryChange} = useSearchContext();
   console.log(searchQuery);
 
   return (
@@ -14,7 +14,7 @@ const SearchForm = () => {
       hover:bg-gray-200 hover:outline-1 outline-slate-400 focus:bg-gray-200 transition  "
         placeholder="Search for a pet"
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={(e) => handleSearchQueryChange(e.target.value)}
       />
     </form>
   );

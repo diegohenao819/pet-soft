@@ -8,20 +8,28 @@ type SearchContextProviderProps = {
 
 type ValuesSearchContextProviderProps = {
   searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  handleSearchQueryChange: (query: string) => void;
 };
 
 export const searchContext =
   createContext<ValuesSearchContextProviderProps | null>(null);
 
 const SearchContextProvider = ({ children }: SearchContextProviderProps) => {
+  // states
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Derived states
+
+  // Event handlers
+  const handleSearchQueryChange = (query: string) => {
+    setSearchQuery(query);
+  };
 
   return (
     <searchContext.Provider
       value={{
         searchQuery,
-        setSearchQuery,
+        handleSearchQueryChange,
       }}
     >
       {children}
