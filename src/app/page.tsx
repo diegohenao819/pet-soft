@@ -6,6 +6,8 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="flex flex-col md:flex-row items-center justify-center h-screen space-x-4 gap-5 bg-background">
+      <Link href="/app/dashboard">Dashboard</Link>
+
       <Image
         src="https://bytegrad.com/course-assets/react-nextjs/petsoft-preview.png"
         alt="PetSoft"

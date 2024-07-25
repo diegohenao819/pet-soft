@@ -2,6 +2,7 @@ import AppFooter from "@/components/AppFooter";
 import AppHeader from "@/components/AppHeader";
 import Background from "@/components/background";
 import PetContextProvider from "@/contexts/PetContextProvider";
+import React from "react";
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const response = await fetch(
