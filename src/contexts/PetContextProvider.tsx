@@ -14,15 +14,22 @@ type ValuesPetContextProviderProps = {
   pets: PetType[];
   selectedPetId: string | null;
   selectedPet: PetType | undefined;
+  numberPets: number;
   handlePetIdChange: (id: string) => void;
 };
 
 const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
+  // states
   const [pets, setPets] = useState<PetType[]>(data);
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
-  const selectedPet = pets.find((pet) => pet.id === selectedPetId);
 
+  // Derived states
+  const selectedPet = pets.find((pet) => pet.id === selectedPetId);
+  const numberPets = pets.length;
+
+
+  // Events
   const handlePetIdChange = (id: string) => {
     setSelectedPetId(id);
   };
@@ -34,6 +41,7 @@ const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
         handlePetIdChange,
         selectedPetId,
         selectedPet,
+        numberPets,
       }}
     >
       {children}

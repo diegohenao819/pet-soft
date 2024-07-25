@@ -16,7 +16,7 @@ const PetDetails = () => {
         <section >
 
 
-          <div className="flex items-center border-b p-4 ">
+          <div className="flex items-center border-b p-4 bg-white">
             <Image
               src={selectedPet.imageUrl}
               alt={selectedPet.name}
@@ -42,7 +42,7 @@ const PetDetails = () => {
           </section>
 
           {/* Section for notes */}
-          <div className="bg-white mx-8 px-7 py-5  rounded-md h-full ">
+          <div className="bg-white mx-8 px-7 py-5  rounded-md h-full border border-black/5 ">
             {selectedPet.notes}
           </div>
         </section>

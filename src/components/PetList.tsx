@@ -1,6 +1,6 @@
 "use client";
 
-import { usePetContext } from "@/lib/hooks";
+import { usePetContext, useSearchContext } from "@/lib/hooks";
 import { PetType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -12,9 +12,15 @@ const PetList = () => {
     handlePetIdChange: () => {},
   };
 
+  const { searchQuery } = useSearchContext();
+
+  const filteredPets = pets.filter((pet) =>
+    pet.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ul className="bg-white/10 border-b border-light w-full h-full">
-      {pets.map((pet: PetType) => {
+      {filteredPets.map((pet: PetType) => {
         return (
           <li key={pet.id}>
             <button
@@ -24,8 +30,6 @@ const PetList = () => {
               )}
               onClick={() => handlePetIdChange(pet.id)}
             >
-        
-           
               <Image
                 src={pet.imageUrl}
                 width={45}
