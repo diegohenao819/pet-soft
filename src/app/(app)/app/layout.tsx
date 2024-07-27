@@ -19,7 +19,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Background />
-      <div className="max-w-[1250px] mx-auto flex flex-col min-h-screen">
+      <div className="max-w-[1250px] mx-auto flex flex-col ">
         <AppHeader />
 
         <SearchContextProvider>

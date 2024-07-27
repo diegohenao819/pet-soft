@@ -1,3 +1,4 @@
+import ButtonPet from "@/components/ButtonPet";
 import ContentBlock from "@/components/ContentBlock";
 import PetDetails from "@/components/PetDetails";
 import PetList from "@/components/PetList";
@@ -11,7 +12,7 @@ function Dashboard() {
 
       {/* MAIN */}
 
-      <section className="grid grid-rows-[45px_300px_500px] gap-4  md:grid-cols-3 md:grid-rows-[45px_1fr]  md:h-[600px]">
+      <section className="grid grid-rows-[45px_300px_500px] gap-4  md:grid-cols-3 md:grid-rows-[45px_1fr]  md:min-h-[530px]">
         <div className="md:row-start-1 md:row-span-1 md:col-start-1 md:col-span-1">
           <SearchForm />
         </div>
@@ -19,6 +20,10 @@ function Dashboard() {
         <div className="relative md:row-start-2 md:row-span-full md:col-start-1 md:col-span-1">
           <ContentBlock>
             <PetList />
+
+            <div className="absolute bottom-4 right-4 ">
+              <ButtonPet actionType="add" />
+            </div>
           </ContentBlock>
         </div>
 
