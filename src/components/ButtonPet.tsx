@@ -1,6 +1,6 @@
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusIcon } from "@radix-ui/react-icons";
-import FormPet from "./FormPet";
+import {FormPet} from "./FormPet";
 import { Button } from "./ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 
