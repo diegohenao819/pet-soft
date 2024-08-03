@@ -41,7 +41,7 @@ export function FormPet({setOpen}: { setOpen: React.Dispatch<React.SetStateActio
     defaultValues: {
       name: "",
       ownerName: "",
-      imageUrl: "",
+      imageUrl: "https://i.pinimg.com/originals/2e/72/c9/2e72c928d6517c0591f59af35291260c.jpg",
       age: 0,
       notes: "",
     },
