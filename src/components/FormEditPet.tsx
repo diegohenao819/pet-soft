@@ -35,7 +35,7 @@ const FormSchema = z.object({
   }),
 });
 
-export function FormPet({
+export function FormEditPet({
   setOpen,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

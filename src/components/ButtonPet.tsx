@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusIcon } from "@radix-ui/react-icons";
-import {FormPet} from "./FormPet";
+import { useState } from "react";
+import { FormEditPet } from "./FormEditPet";
+import { FormPet } from "./FormPet";
 import { Button } from "./ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { useState } from "react";
 
 type ButtonPetProps = {
   actionType: "add" | "edit" | "delete";
@@ -13,7 +14,6 @@ type ButtonPetProps = {
 };
 
 const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
-
   const [open, setOpen] = useState(false);
   if (actionType === "add") {
     return (
@@ -34,7 +34,19 @@ const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
   }
 
   if (actionType === "edit") {
-    return <Button variant="secondary">{children}</Button>;
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button>Edit</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Pet</DialogTitle>
+            <FormEditPet setOpen={setOpen} />
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   if (actionType === "delete") {
