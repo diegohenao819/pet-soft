@@ -5,6 +5,7 @@ import PetContextProvider from "@/contexts/PetContextProvider";
 import SearchContextProvider from "@/contexts/SearchContextProvider";
 import React from "react";
 
+
 const layout = async ({ children }: { children: React.ReactNode }) => {
   const response = await fetch(
     "https://bytegrad.com/course-assets/projects/petsoft/api/pets"

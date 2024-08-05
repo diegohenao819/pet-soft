@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { usePetContext } from "@/lib/hooks";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -46,17 +47,21 @@ export function FormPet({
       name: "",
       ownerName: "",
       imageUrl:
-        "https://i.pinimg.com/originals/2e/72/c9/2e72c928d6517c0591f59af35291260c.jpg",
+        "https://th.bing.com/th/id/R.d9e65b111593ad20ddf76cae90e910e7?rik=61GtwwvMZvSn5w&riu=http%3a%2f%2fclipart-library.com%2fimg%2f1024997.png&ehk=T6t8oq3OlRzsU6PgSXQzfUnpFuVXEol5SNjO5S8xi4s%3d&risl=&pid=ImgRaw&r=0",
       age: 0,
       notes: "",
     },
   });
 
+  const { handleNewPet } = usePetContext();
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
     setOpen(false);
+    handleNewPet({ id: "", ...data });
+
     toast({
-      title: "You submitted the following values:",
+      title: "New Pet Added",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>

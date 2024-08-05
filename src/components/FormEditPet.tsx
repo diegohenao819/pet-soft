@@ -15,7 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import { usePetContext } from "@/lib/hooks";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -40,28 +41,32 @@ export function FormEditPet({
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { toast } = useToast();
+  const {selectedPet, handleEditPet} = usePetContext();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
-      ownerName: "",
+      name: selectedPet?.name || "",
+      ownerName: selectedPet?.ownerName || "",
       imageUrl:
-        "https://i.pinimg.com/originals/2e/72/c9/2e72c928d6517c0591f59af35291260c.jpg",
-      age: 0,
-      notes: "",
+      selectedPet?.imageUrl || "https://i.pinimg.com/originals/2e/72/c9/2e72c928d6517c0591f59af35291260c.jpg",
+      age: selectedPet?.age || 0,
+      notes: selectedPet?.notes || "",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
     setOpen(false);
+    handleEditPet(selectedPet?.id || "", data);
+    
+
+
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: "Success!",
+      description: data.name + " has been updated.",
+      variant: "success",
     });
   }
 
@@ -71,11 +76,12 @@ export function FormEditPet({
         <FormField
           control={form.control}
           name="name"
+         
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Name" {...field} />
+                <Input  {...field}  />
               </FormControl>
               <FormDescription>Pet`s name`</FormDescription>
               <FormMessage />
@@ -152,7 +158,9 @@ export function FormEditPet({
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" onClick={() => {}}>
+          Submit
+        </Button>
       </form>
     </Form>
   );
