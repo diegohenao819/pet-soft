@@ -4,20 +4,15 @@ import { usePetContext } from "@/lib/hooks";
 import Image from "next/image";
 import ButtonPet from "./ButtonPet";
 
-
 const PetDetails = () => {
-  const { selectedPet } = usePetContext();
+  const { selectedPet, handleDeletePet } = usePetContext();
 
   return (
     <main className="flex flex-col h-full w-full">
       {!selectedPet ? (
         <div> No selected pet :::: </div>
       ) : (
-
-
         <section className="flex flex-col h-full w-full">
-
-
           <div className="flex items-center border-b p-4 bg-white">
             <Image
               src={selectedPet.imageUrl}
@@ -29,19 +24,17 @@ const PetDetails = () => {
             <h2 className="text-black text-2xl font-bold ml-4 ">
               {selectedPet.name}
             </h2>
-           
 
-        <div className="ml-auto gap-4 flex">
-          <ButtonPet actionType="edit">Edit</ButtonPet>
-          <ButtonPet actionType="delete">Delete</ButtonPet>
-        </div>
-
+            <div className="ml-auto gap-4 flex">
+              <ButtonPet actionType="edit">Edit</ButtonPet>
+              <ButtonPet
+                actionType="delete"
+               
+              >
+                Delete
+              </ButtonPet>
+            </div>
           </div>
-
-
-
-
-
 
           {/* // Pet's info: owner's name and age */}
           <section className="flex justify-around p-8 mt-4 text-center">
@@ -55,13 +48,10 @@ const PetDetails = () => {
             </div>
           </section>
 
-
           {/* Section for notes */}
           <div className=" mx-8 px-7 py-6 mb-4 rounded-md flex-1 flex border border-black/10 bg-white ">
             {selectedPet.notes}
           </div>
-
-
         </section>
       )}
     </main>

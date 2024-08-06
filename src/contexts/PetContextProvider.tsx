@@ -20,6 +20,7 @@ type ValuesPetContextProviderProps = {
   handlePetIdChange: (id: string) => void;
   handleNewPet: (newPet: PetType) => void;
   handleEditPet: (petId: string, newPet: Omit<PetType, "id">) => void;
+  handleDeletePet: (petId: string) => void;
 };
 
 const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
@@ -52,6 +53,12 @@ const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
     );
   };
 
+
+  const handleDeletePet = (petId: string) => {
+    setPets((prevPets) => prevPets.filter((pet) => pet.id !== petId));
+    console.log("Pet deleted");
+  }
+
   return (
     <PetContext.Provider
       value={{
@@ -62,6 +69,7 @@ const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
         numberPets,
         handleNewPet,
         handleEditPet,
+        handleDeletePet,
       }}
     >
       {children}

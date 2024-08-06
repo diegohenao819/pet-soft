@@ -1,5 +1,6 @@
 "use client";
 
+import { usePetContext } from "@/lib/hooks";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
@@ -14,6 +15,8 @@ type ButtonPetProps = {
 };
 
 const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
+  const { handleDeletePet, selectedPetId } = usePetContext();
+
   const [open, setOpen] = useState(false);
   if (actionType === "add") {
     return (
@@ -50,7 +53,16 @@ const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
   }
 
   if (actionType === "delete") {
-    return <Button variant="destructive">{children}</Button>;
+    return (
+      <Button
+        variant="destructive"
+        onClick={() => {
+          handleDeletePet(selectedPetId!);
+        }}
+      >
+        {children}
+      </Button>
+    );
   }
 
   // Optional: return null or a default JSX element if actionType does not match
