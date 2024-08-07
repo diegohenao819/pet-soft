@@ -4,18 +4,12 @@ import Background from "@/components/background";
 import PetContextProvider from "@/contexts/PetContextProvider";
 import SearchContextProvider from "@/contexts/SearchContextProvider";
 import React from "react";
+import prisma  from "@/lib/db";
 
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
-  const response = await fetch(
-    "https://bytegrad.com/course-assets/projects/petsoft/api/pets"
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch pets");
-  }
-
-  const data = await response.json();
-  console.log(data);
+  
+  const pets = await prisma?.pet.findMany()
 
   return (
     <>
@@ -24,7 +18,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
         <AppHeader />
 
         <SearchContextProvider>
-          <PetContextProvider data={data}>{children}</PetContextProvider>
+          <PetContextProvider data={pets}>{children}</PetContextProvider>
         </SearchContextProvider>
         <AppFooter />
       </div>

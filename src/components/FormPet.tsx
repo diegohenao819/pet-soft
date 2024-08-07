@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { addPet } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -58,7 +59,6 @@ export function FormPet({
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
     setOpen(false);
-    handleNewPet({ id: "", ...data });
 
     toast({
       title: "New Pet Added",
@@ -72,7 +72,11 @@ export function FormPet({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form
+        action={addPet}
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-2/3 space-y-6"
+      >
         <FormField
           control={form.control}
           name="name"
