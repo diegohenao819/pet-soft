@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { addPet } from "@/actions/actions";
@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { usePetContext } from "@/lib/hooks";
+import { useFormStatus } from "react-dom";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -55,31 +56,59 @@ export function FormPet({
   });
 
   const { handleNewPet } = usePetContext();
+  const { pending } = useFormStatus();
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    setOpen(false);
-
-    toast({
-      title: "New Pet Added",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    
+    // Handle Error
+    const error = await addPet(data);
+    if (error) {
+      console.log(error);
+      toast ({
+        variant: "destructive",
+        title: "Error Adding Pet",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4 destructive">
+            <code className="text-white">{JSON.stringify(error, null, 2)}</code>
+          </pre>
+        ),
+      });
+      return;
+    }
+    
+    
+    if (!error) {
+      setOpen(false);
+      toast({
+        title: "New Pet Added",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      });
+    }
   }
 
   return (
     <Form {...form}>
       <form
-        action={
-          (formData) => {
-            addPet(formData);
-            setOpen(false);
-        }
-      }
-        // onSubmit={form.handleSubmit(onSubmit)}
+        // action={(formData) => {
+        //   addPet(formData);
+        //   setOpen(false);
+        //   toast({
+        //     title: "New Pet Added",
+        //     description: (
+        //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        //         <code className="text-white">
+        //           {JSON.stringify(formData.get("name"), null, 2)}
+        //         </code>
+        //       </pre>
+        //     ),
+        //   });
+        // }}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="w-2/3 space-y-6"
       >
         <FormField
@@ -166,7 +195,9 @@ export function FormPet({
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">
+          {pending ? "Adding Pet.................." : "Add Pet"}
+        </Button>
       </form>
     </Form>
   );

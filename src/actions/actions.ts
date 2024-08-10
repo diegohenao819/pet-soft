@@ -13,22 +13,28 @@ type petFormType = {
     notes: string;
 }
 
-
-export async function addPet(formData) {
+export async function addPet(formData:petFormType) {
   console.log(formData)
+  
+  try {
+    await prisma.pet.create({
+      data: {
+        // name: formData.name,
+        ownerName: formData.ownerName,
+        imageUrl: formData.imageUrl,
+        age: formData.age,
+        notes: formData.notes,
+      },
+    });
+  }
+  catch (error) {
+    
+    return "Error adding pet";
+  }
 
-  await prisma.pet.create({
-    data: {
-      name: formData.get("name"),
-        ownerName: formData.get("ownerName"),
-        imageUrl: formData.get("imageUrl"),
-        age: parseInt(formData.get("age")),
-        notes: formData.get("notes"),
-    },
-  });
+  
+
 
   revalidatePath("/app", "layout");
 }
-
-
 
