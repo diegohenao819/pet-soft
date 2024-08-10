@@ -8,6 +8,7 @@ import { FormEditPet } from "./FormEditPet";
 import { FormPet } from "./FormPet";
 import { Button } from "./ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { deletePet } from "@/actions/actions";
 
 type ButtonPetProps = {
   actionType: "add" | "edit" | "delete";
@@ -15,7 +16,8 @@ type ButtonPetProps = {
 };
 
 const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
-  const { handleDeletePet, selectedPetId } = usePetContext();
+  const {  selectedPetId } = usePetContext();
+ 
 
   const [open, setOpen] = useState(false);
   if (actionType === "add") {
@@ -57,7 +59,7 @@ const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
       <Button
         variant="destructive"
         onClick={() => {
-          handleDeletePet(selectedPetId!);
+          deletePet(selectedPetId || "");
         }}
       >
         {children}

@@ -60,12 +60,12 @@ export function FormPet({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    
+
     // Handle Error
     const error = await addPet(data);
     if (error) {
       console.log(error);
-      toast ({
+      toast({
         variant: "destructive",
         title: "Error Adding Pet",
         description: (
@@ -76,8 +76,7 @@ export function FormPet({
       });
       return;
     }
-    
-    
+
     if (!error) {
       setOpen(false);
       toast({

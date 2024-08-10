@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { editPet } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -42,7 +43,7 @@ export function FormEditPet({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { toast } = useToast();
-  const {selectedPet, handleEditPet} = usePetContext();
+  const { selectedPet } = usePetContext();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -50,25 +51,23 @@ export function FormEditPet({
       name: selectedPet?.name || "",
       ownerName: selectedPet?.ownerName || "",
       imageUrl:
-      selectedPet?.imageUrl || "https://i.pinimg.com/originals/2e/72/c9/2e72c928d6517c0591f59af35291260c.jpg",
+        selectedPet?.imageUrl ||
+        "https://i.pinimg.com/originals/2e/72/c9/2e72c928d6517c0591f59af35291260c.jpg",
       age: selectedPet?.age || 0,
       notes: selectedPet?.notes || "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     console.log(data);
+    editPet(selectedPet?.id || "", form.getValues());
     setOpen(false);
-    handleEditPet(selectedPet?.id || "", data);
-    
-
-
     toast({
       title: "Success!",
-      description: data.name + " has been updated.",
+      description: form.getValues().name + " has been updated.",
       variant: "success",
     });
-  }
+  };
 
   return (
     <Form {...form}>
@@ -76,12 +75,11 @@ export function FormEditPet({
         <FormField
           control={form.control}
           name="name"
-         
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input  {...field}  />
+                <Input {...field} />
               </FormControl>
               <FormDescription>Pet`s name`</FormDescription>
               <FormMessage />
