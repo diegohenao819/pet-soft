@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { addPet } from "@/actions/actions";
@@ -73,8 +73,13 @@ export function FormPet({
   return (
     <Form {...form}>
       <form
-        action={addPet}
-        onSubmit={form.handleSubmit(onSubmit)}
+        action={
+          (formData) => {
+            addPet(formData);
+            setOpen(false);
+        }
+      }
+        // onSubmit={form.handleSubmit(onSubmit)}
         className="w-2/3 space-y-6"
       >
         <FormField

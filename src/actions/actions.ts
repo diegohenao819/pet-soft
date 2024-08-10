@@ -2,6 +2,7 @@
 
 
 import prisma from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 type petFormType = {
     id?: string;
@@ -11,16 +12,6 @@ type petFormType = {
     age: number;
     notes: string;
 }
-
-
-// export async function addPet(newPet: petFormType) {
-//     const { id, ...rest } = newPet;
-//     const data = id === '' ? rest : newPet;
-
-//     return await prisma.pet.create({
-//         data: data,
-//       });
-// }
 
 
 export async function addPet(formData) {
@@ -35,6 +26,8 @@ export async function addPet(formData) {
         notes: formData.get("notes"),
     },
   });
+
+  revalidatePath("/app", "layout");
 }
 
 

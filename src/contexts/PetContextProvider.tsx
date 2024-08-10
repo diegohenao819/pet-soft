@@ -24,9 +24,9 @@ type ValuesPetContextProviderProps = {
   handleDeletePet: (petId: string) => void;
 };
 
-const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
+const PetContextProvider = ({ children, data:pets }: PetContextProviderProps) => {
   // states
-  const [pets, setPets] = useState<PetType[]>(data);
+
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
 
   // Derived states
