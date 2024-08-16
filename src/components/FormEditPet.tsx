@@ -43,7 +43,7 @@ export function FormEditPet({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { toast } = useToast();
-  const { selectedPet } = usePetContext();
+  const { selectedPet, handleNewPet } = usePetContext();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

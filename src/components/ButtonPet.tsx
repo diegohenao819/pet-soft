@@ -1,14 +1,14 @@
 "use client";
 
+import { deletePet } from "@/actions/actions";
 import { usePetContext } from "@/lib/hooks";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { FormEditPet } from "./FormEditPet";
 import { FormPet } from "./FormPet";
 import { Button } from "./ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { deletePet } from "@/actions/actions";
 
 type ButtonPetProps = {
   actionType: "add" | "edit" | "delete";
@@ -16,8 +16,8 @@ type ButtonPetProps = {
 };
 
 const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
-  const {  selectedPetId } = usePetContext();
- 
+  const { selectedPetId } = usePetContext();
+  const [isPending, startTransition] = useTransition();
 
   const [open, setOpen] = useState(false);
   if (actionType === "add") {
@@ -58,8 +58,11 @@ const ButtonPet = ({ actionType, children }: ButtonPetProps) => {
     return (
       <Button
         variant="destructive"
-        onClick={() => {
-          deletePet(selectedPetId || "");
+        disabled={isPending}
+        onClick={async () => {
+          startTransition(async () => {
+            await deletePet(selectedPetId || "");
+          });
         }}
       >
         {children}

@@ -59,7 +59,13 @@ export function FormPet({
   const { pending } = useFormStatus();
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setOpen(false);
     console.log(data);
+    // Optimistic UI
+    handleNewPet({
+      id: "",
+      ...data,
+    });
 
     // Handle Error
     const error = await addPet(data);
@@ -78,7 +84,7 @@ export function FormPet({
     }
 
     if (!error) {
-      setOpen(false);
+      
       toast({
         title: "New Pet Added",
         description: (

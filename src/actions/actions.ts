@@ -32,7 +32,6 @@ export async function addPet(formData: petFormType) {
   revalidatePath("/app", "layout");
 }
 
-
 export async function editPet(id: string, formData: petFormType) {
   console.log(formData);
 
@@ -57,17 +56,43 @@ export async function editPet(id: string, formData: petFormType) {
 }
 
 
-
 export async function deletePet(id: string) {
-  try {
-    await prisma.pet.delete({
-      where: {
-        id,
-      },
-    });
-  } catch (error) {
-    return "Error deleting pet";
-  }
-
-  revalidatePath("/app", "layout");
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        await prisma.pet.delete({
+          where: {
+            id,
+          },
+        });
+        
+        revalidatePath("/app", "layout");
+        resolve();
+        
+      } catch (error) {
+        console.error("Error deleting pet:", error);
+        reject(error);
+      }
+    }, 2000);
+  });
 }
+
+
+
+// export async function deletePet(id: string) {
+//   // Usar await con una promesa que envuelve setTimeout
+//   await new Promise((resolve) => setTimeout(resolve, 2000));
+
+//   try {
+//     await prisma.pet.delete({
+//       where: {
+//         id,
+//       },
+//     });
+
+//     // Revalidar la ruta después de la eliminación
+//     revalidatePath("/app", "layout");
+//   } catch (error) {
+//     console.error("Error deleting pet:", error);
+//   }
+// }

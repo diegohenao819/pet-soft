@@ -2,7 +2,7 @@
 
 import { addPet } from "@/actions/actions";
 import { PetType } from "@/lib/types";
-import React, { createContext, useState } from "react";
+import React, { createContext, useOptimistic, useState } from "react";
 
 export const PetContext = createContext<ValuesPetContextProviderProps | null>(
   null
@@ -24,23 +24,37 @@ type ValuesPetContextProviderProps = {
   handleDeletePet: (petId: string) => void;
 };
 
-const PetContextProvider = ({ children, data:pets }: PetContextProviderProps) => {
+const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
   // states
 
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  const [optimisticPets, setOptimisticPets] = useOptimistic(
+    data,
+    (state, newPet) => {
+      return [...state, newPet];
+    }
+  );
 
   // Derived states
-  const selectedPet = pets.find((pet) => pet.id === selectedPetId);
-  const numberPets = pets.length;
+  const selectedPet = optimisticPets.find((pet) => pet.id === selectedPetId);
+  const numberPets = optimisticPets.length;
 
   // functions
   const handlePetIdChange = (id: string) => {
     setSelectedPetId(id);
   };
 
+
+
+
   const handleNewPet = async (newPet: Omit<PetType, "id">) => {
-    await addPet(newPet);
+    setOptimisticPets(newPet);
+  
   };
+
+
+
+
 
   const handleEditPet = (petId: string, newPet: Omit<PetType, "id">) => {
     setPets((prevPets) =>
@@ -53,16 +67,15 @@ const PetContextProvider = ({ children, data:pets }: PetContextProviderProps) =>
     );
   };
 
-
   const handleDeletePet = (petId: string) => {
     setPets((prevPets) => prevPets.filter((pet) => pet.id !== petId));
     console.log("Pet deleted");
-  }
+  };
 
   return (
     <PetContext.Provider
       value={{
-        pets,
+        pets: optimisticPets,
         handlePetIdChange,
         selectedPetId,
         selectedPet,
