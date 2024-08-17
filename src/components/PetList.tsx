@@ -1,7 +1,7 @@
 "use client";
 
 import { usePetContext, useSearchContext } from "@/lib/hooks";
-import { PetType } from "@/lib/types";
+import { Pet as PetType } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 

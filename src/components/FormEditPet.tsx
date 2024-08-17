@@ -43,7 +43,7 @@ export function FormEditPet({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { toast } = useToast();
-  const { selectedPet, handleNewPet } = usePetContext();
+  const { selectedPet, handleEditPet } = usePetContext();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,8 +60,10 @@ export function FormEditPet({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     console.log(data);
-    editPet(selectedPet?.id || "", form.getValues());
+    handleEditPet(selectedPet?.id || "", form.getValues());
     setOpen(false);
+    editPet(selectedPet?.id || "", form.getValues());
+    
     toast({
       title: "Success!",
       description: form.getValues().name + " has been updated.",

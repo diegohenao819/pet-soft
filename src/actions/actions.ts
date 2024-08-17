@@ -55,29 +55,19 @@ export async function editPet(id: string, formData: petFormType) {
   revalidatePath("/app", "layout");
 }
 
-
 export async function deletePet(id: string) {
-  return new Promise<void>((resolve, reject) => {
-    setTimeout(async () => {
-      try {
-        await prisma.pet.delete({
-          where: {
-            id,
-          },
-        });
-        
-        revalidatePath("/app", "layout");
-        resolve();
-        
-      } catch (error) {
-        console.error("Error deleting pet:", error);
-        reject(error);
-      }
-    }, 2000);
-  });
+  try {
+    await prisma.pet.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath("/app", "layout");
+  } catch (error) {
+    console.error("Error deleting pet:", error);
+  }
 }
-
-
 
 // export async function deletePet(id: string) {
 //   // Usar await con una promesa que envuelve setTimeout

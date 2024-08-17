@@ -63,7 +63,6 @@ export function FormPet({
     console.log(data);
     // Optimistic UI
     handleNewPet({
-      id: "",
       ...data,
     });
 
@@ -84,7 +83,6 @@ export function FormPet({
     }
 
     if (!error) {
-      
       toast({
         title: "New Pet Added",
         description: (
