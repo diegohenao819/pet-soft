@@ -1,10 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { editPet } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,33 +11,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { usePetContext } from "@/lib/hooks";
-
-const FormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  ownerName: z.string().min(2, {
-    message: "Owner name must be at least 2 characters.",
-  }),
-  imageUrl: z.string().url({
-    message: "Please enter a valid URL.",
-  }),
-  age: z.number().int().positive({
-    message: "Please enter a valid age",
-  }),
-  notes: z.string().max(100, {
-    message: "Notes must be at most 100 characters.",
-  }),
-});
+import { FormSchema } from "@/lib/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export function FormEditPet({
   setOpen,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { toast } = useToast();
   const { selectedPet, handleEditPet } = usePetContext();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -58,22 +37,18 @@ export function FormEditPet({
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
-    handleEditPet(selectedPet?.id || "", form.getValues());
-    setOpen(false);
-    editPet(selectedPet?.id || "", form.getValues());
-    
-    toast({
-      title: "Success!",
-      description: form.getValues().name + " has been updated.",
-      variant: "success",
-    });
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form
+        action={async () => {
+          const isValid = await form.trigger();
+          if (!isValid) return;
+          const data = form.getValues();
+          setOpen(false);
+          handleEditPet(selectedPet!.id, data);
+        }}
+        className="w-2/3 space-y-6"
+      >
         <FormField
           control={form.control}
           name="name"

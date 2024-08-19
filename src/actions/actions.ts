@@ -1,29 +1,21 @@
 "use server";
 
 import prisma from "@/lib/db";
+import { FormSchema, PetEssentials } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
-type petFormType = {
-  id?: string;
-  name: string;
-  ownerName: string;
-  imageUrl: string;
-  age: number;
-  notes: string;
-};
 
-export async function addPet(formData: petFormType) {
+export async function addPet(formData: PetEssentials) {
   console.log(formData);
+
+  const validatedPet = FormSchema.safeParse(formData);
+  if (!validatedPet.success) {
+    return validatedPet.error.errors;
+  }
 
   try {
     await prisma.pet.create({
-      data: {
-        name: formData.name,
-        ownerName: formData.ownerName,
-        imageUrl: formData.imageUrl,
-        age: formData.age,
-        notes: formData.notes,
-      },
+      data: validatedPet.data,
     });
   } catch (error) {
     return "Error adding pet";
@@ -32,7 +24,7 @@ export async function addPet(formData: petFormType) {
   revalidatePath("/app", "layout");
 }
 
-export async function editPet(id: string, formData: petFormType) {
+export async function editPet(id: string, formData: PetEssentials) {
   console.log(formData);
 
   try {

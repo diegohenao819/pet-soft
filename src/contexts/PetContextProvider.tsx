@@ -1,5 +1,7 @@
 "use client";
 
+import { addPet, editPet } from "@/actions/actions";
+import { toast } from "@/components/ui/use-toast";
 import { PetEssentials } from "@/lib/types";
 import { Pet as PetType}  from "@prisma/client";
 import React, { createContext, useOptimistic, useState } from "react";
@@ -59,12 +61,53 @@ const PetContextProvider = ({ children, data }: PetContextProviderProps) => {
   };
 
   const handleNewPet = async (newPet: PetEssentials) => {
+    // Optimistic UI update
     setOptimisticPets({ action: "add", payload: newPet });
+  
+    try {
+      const error = await addPet(newPet);
+      if (error) {
+        throw new Error(JSON.stringify(error));
+      }
+  
+      // Show success message
+      toast({
+        title: "New Pet Added",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(newPet, null, 2)}</code>
+          </pre>
+        ),
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Error Adding Pet",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4 destructive">
+            <code className="text-white">{error.message}</code>
+          </pre>
+        ),
+      });
+    }
   };
+  
 
   const handleEditPet = (petId: string, newPet: PetEssentials) => {
     setOptimisticPets({ action: "edit", payload: { id: petId, ...newPet } });
     console.log("desde handleEditPet");
+    console.log(data);
+
+   
+    editPet(petId, newPet);
+
+    toast({
+      title: "Success!",
+      description: newPet.name + " has been updated.",
+      variant: "success",
+    });
+
   };
 
   const handleDeletePet = (petId: string) => {
