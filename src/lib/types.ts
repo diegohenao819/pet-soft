@@ -3,6 +3,8 @@ import { z } from "zod";
 
 export type PetEssentials = Omit<Pet, "id" | "createdAt" | "updatedAt">;
 
+export const ValidPetId = z.string().cuid();
+
 export const FormSchema = z
   .object({
     name: z
