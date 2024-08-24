@@ -7,7 +7,7 @@ const Login = () => {
       <div className="flex justify-center mb-4">
         <h2 className="font-bold text-3xl ">Log In</h2>
       </div>
-      <AuthForm />
+      <AuthForm type="login" />
       <p className="text-sm text-slate-500 mt-3">
         No account yet?{" "}
         <Link href="/signup" className="text-slate-700 font-medium">
@@ -17,5 +17,7 @@ const Login = () => {
     </div>
   );
 };
+
+
 
 export default Login;
