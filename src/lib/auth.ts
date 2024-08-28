@@ -31,13 +31,20 @@ const config = {
     }),
   ],
   callbacks: {
-    authorized: ({ request }) => {
+    authorized: ({auth,  request }) => {
       const isTryingToAccessApp = request.url.includes("/app");
-      if (isTryingToAccessApp) {
-        return false;
-      } else {
-        return true;
+      const isLoggedIn = auth?.user;
+
+      if(!isLoggedIn && isTryingToAccessApp) {
+        return false
       }
+      if (isLoggedIn && isTryingToAccessApp) {
+        return true
+      }
+      if(!isTryingToAccessApp) {
+        return true
+      }
+
     },
   },
 } satisfies NextAuthConfig;

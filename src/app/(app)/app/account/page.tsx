@@ -1,9 +1,14 @@
-const Account = () => {
+import ContentBlock from "@/components/ContentBlock";
+import { auth } from "@/lib/auth";
+
+const Account = async () => {
+  const session = await auth();
   return (
-    <div className="flex flex-col h-[600px] bg-gray-500 w-full text-center">
-      <section className="flex-1 bg-green-400"> section 1</section>
-      <section className='flex-1 bg-red-400'>section 2</section>
-      <section className="bg-purple-300 flex-1">section 3</section>
+    <div className="h-full bg-white h-vh">
+      <h1>Your Account</h1>
+      <ContentBlock>
+        <p className="h-[500px]">Logged in as {session?.user?.email} </p>
+      </ContentBlock>
     </div>
   );
 };
