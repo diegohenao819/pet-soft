@@ -3,6 +3,7 @@
 import { signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { FormSchema, PetEssentials, ValidPetId } from "@/lib/types";
+import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 
 // User Actions
@@ -14,6 +15,25 @@ export async function logIn(formData: FormData) {
 
 export async function logOut() {
   await signOut({ redirectTo: "/" });
+}
+
+export async function signUp(formData: FormData) {
+  const hashedPassword = await bcrypt.hash(
+    formData.get("password") as string,
+    10
+  );
+
+  try {
+    await prisma.user.create({
+      data: {
+        email: formData.get("email") as string,
+        hashedPassword: hashedPassword,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating user:", error);
+  }
+  await signIn("credentials", formData);
 }
 
 // Pet Actions

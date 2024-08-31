@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
+import { Button } from "./ui/button";
+import { logOut } from "@/actions/actions";
 
 const links = [
   { href: "/app/dashboard", label: "Dashboard" },
@@ -18,7 +20,9 @@ const AppHeader = () => {
       <Logo />
 
       <nav>
+   
         <ul className="flex gap-3">
+       
           {links.map((link) => {
             return (
               <li
@@ -34,6 +38,8 @@ const AppHeader = () => {
               </li>
             );
           })}
+           <Button onClick={async () => await logOut()}
+           >Log Out</Button>
         </ul>
       </nav>
     </div>
