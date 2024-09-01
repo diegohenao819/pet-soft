@@ -1,10 +1,11 @@
 "use server";
 
-import { signIn, signOut } from "@/lib/auth";
+import { auth, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { FormSchema, PetEssentials, ValidPetId } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // User Actions
 export async function logIn(formData: FormData) {
@@ -39,6 +40,10 @@ export async function signUp(formData: FormData) {
 // Pet Actions
 export async function addPet(formData: PetEssentials) {
   console.log(formData);
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
 
   const validatedPet = FormSchema.safeParse(formData);
   if (!validatedPet.success) {
@@ -47,7 +52,14 @@ export async function addPet(formData: PetEssentials) {
 
   try {
     await prisma.pet.create({
-      data: validatedPet.data,
+      data: {
+        ...validatedPet.data,
+        User: {
+          connect: {
+            id: session.user.id,
+          },
+        },
+      },
     });
   } catch (error) {
     return "Error adding pet";
@@ -57,12 +69,32 @@ export async function addPet(formData: PetEssentials) {
 }
 
 export async function editPet(PetId: string, newPet: PetEssentials) {
+  // authentication check
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+  // validation check
   const validatedPet = FormSchema.safeParse(newPet);
   const validatedId = ValidPetId.safeParse(PetId);
 
   if (!validatedPet.success || !validatedId.success) {
     return "Invalid data";
   }
+  // authorization check
+  const pet = await prisma.pet.findUnique({
+    where: {
+      id: validatedId.data,
+    },
+  });
+  if (!pet) {
+    return "Pet not found";
+  }
+  if (pet.userId !== session.user.id) {
+    return "Unauthorized";
+  }
+
+  // data mutation
 
   try {
     await prisma.pet.update({
@@ -79,38 +111,37 @@ export async function editPet(PetId: string, newPet: PetEssentials) {
 }
 
 export async function deletePet(id: string) {
+  // authentication check
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+  // validation check
   const validatedId = ValidPetId.safeParse(id);
   if (!validatedId.success) {
     return "Invalid data";
   }
-
+  // authorization check
+  const pet = await prisma.pet.findUnique({
+    where: {
+      id: validatedId.data,
+    },
+  });
+  if (!pet) {
+    return "Pet not found";
+  }
+  if (pet.userId !== session.user.id) {
+    return "Unauthorized";
+  }
+  // data mutation
   try {
     await prisma.pet.delete({
       where: {
         id: validatedId.data,
       },
     });
-
     revalidatePath("/app", "layout");
   } catch (error) {
     console.error("Error deleting pet:", error);
   }
 }
-
-// export async function deletePet(id: string) {
-//   // Usar await con una promesa que envuelve setTimeout
-//   await new Promise((resolve) => setTimeout(resolve, 2000));
-
-//   try {
-//     await prisma.pet.delete({
-//       where: {
-//         id,
-//       },
-//     });
-
-//     // Revalidar la ruta después de la eliminación
-//     revalidatePath("/app", "layout");
-//   } catch (error) {
-//     console.error("Error deleting pet:", error);
-//   }
-// }

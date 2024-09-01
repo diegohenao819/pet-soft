@@ -61,6 +61,7 @@ const config = {
     session: ({ session, token }) => {
       if (session.user) {
         session.user.id = token.userId;
+       
       }
 
       return session;
