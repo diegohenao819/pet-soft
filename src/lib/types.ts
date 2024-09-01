@@ -1,7 +1,7 @@
 import { Pet } from "@prisma/client";
 import { z } from "zod";
 
-export type PetEssentials = Omit<Pet, "id" | "createdAt" | "updatedAt">;
+export type PetEssentials = Omit<Pet, "id" | "createdAt" | "updatedAt" | "userId">;
 
 export const ValidPetId = z.string().cuid();
 
@@ -30,3 +30,14 @@ export const FormSchema = z
       ...data,
     };
   });
+
+
+
+
+  export const authSchema = z.object({
+    email: z.string().email().max(100),
+    password: z.string().max(100),
+  });
+
+
+  export type TAuth = z.infer<typeof authSchema>;

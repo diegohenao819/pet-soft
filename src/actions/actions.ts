@@ -2,16 +2,18 @@
 
 import { auth, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { FormSchema, PetEssentials, ValidPetId } from "@/lib/types";
+import { authSchema, FormSchema, PetEssentials, ValidPetId } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 // User Actions
-export async function logIn(formData: FormData) {
-  const authData = Object.fromEntries(formData.entries());
-  console.log(authData);
-  await signIn("credentials", authData);
+export async function logIn(formData: unknown) {
+  if (!(formData instanceof FormData)) {
+    return "Invalid data";
+  }
+
+  await signIn("credentials", formData);
 }
 
 export async function logOut() {
@@ -19,15 +21,26 @@ export async function logOut() {
 }
 
 export async function signUp(formData: FormData) {
-  const hashedPassword = await bcrypt.hash(
-    formData.get("password") as string,
-    10
-  );
+// check if formData is an instance of FormData
+  if (!(formData instanceof FormData)) {
+    return "Invalid data";
+  }
+// convert formData to plain object
+const formDataEntries = Object.fromEntries(formData.entries());
+// validation
+  const validatedFormData = authSchema.safeParse(formDataEntries);
+  if (!validatedFormData.success) {
+    return "Invalid data";
+  }
+
+  const { email, password } = validatedFormData.data;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     await prisma.user.create({
       data: {
-        email: formData.get("email") as string,
+        email,
         hashedPassword: hashedPassword,
       },
     });

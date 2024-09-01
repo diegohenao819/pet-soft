@@ -14,12 +14,12 @@ const AuthForm = ({type}: AuthFormProps) => {
     >
       <div>
         <Label htmlFor="email"> Email</Label>
-        <Input type="email" id="email" name="email" className="mt-2" />
+        <Input type="email" id="email" name="email" className="mt-2" required maxLength={100} />
       </div>
 
       <div>
         <Label htmlFor="password"> Password</Label>
-        <Input type="password" id="password" name="password" className="mt-2" />
+        <Input type="password" id="password" name="password" className="mt-2" required maxLength={100} />
       </div>
 
       <Button type="submit">{type === "login" ? "Log in" : "Sign up"}</Button>

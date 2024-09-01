@@ -44,6 +44,7 @@ export function FormEditPet({
           const isValid = await form.trigger();
           if (!isValid) return;
           const data = form.getValues();
+
           setOpen(false);
           handleEditPet(selectedPet!.id, data);
         }}
