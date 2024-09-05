@@ -46,6 +46,7 @@ const config = {
   ],
   callbacks: {
     authorized: ({ auth, request }) => {
+      // runs on every request to check if user is authorized
       const isTryingToAccessApp = request.url.includes("/app");
       const isLoggedIn = auth?.user;
 
@@ -56,8 +57,16 @@ const config = {
         return true;
       }
       if (isLoggedIn && !isTryingToAccessApp) {
-        return Response.redirect(new URL("/app/dashboard", request.url));
+        if (
+          request.nextUrl.pathname.includes("/login") ||
+          request.nextUrl.pathname.includes("/signup")
+        ) {
+          return Response.redirect(new URL("/payment", request.url));
+        }
+
+        return true;
       }
+
       if (!isLoggedIn && !isTryingToAccessApp) {
         return true;
       }

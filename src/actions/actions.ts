@@ -6,7 +6,7 @@ import { authSchema, FormSchema, PetEssentials, ValidPetId } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 // User Actions
 export async function logIn(formData: unknown) {
   if (!(formData instanceof FormData)) {
@@ -21,13 +21,13 @@ export async function logOut() {
 }
 
 export async function signUp(formData: FormData) {
-// check if formData is an instance of FormData
+  // check if formData is an instance of FormData
   if (!(formData instanceof FormData)) {
     return "Invalid data";
   }
-// convert formData to plain object
-const formDataEntries = Object.fromEntries(formData.entries());
-// validation
+  // convert formData to plain object
+  const formDataEntries = Object.fromEntries(formData.entries());
+  // validation
   const validatedFormData = authSchema.safeParse(formDataEntries);
   if (!validatedFormData.success) {
     return "Invalid data";
@@ -157,4 +157,28 @@ export async function deletePet(id: string) {
   } catch (error) {
     console.error("Error deleting pet:", error);
   }
+}
+
+// Payment Actions
+export async function createCheckoutSession() {
+  // authentication check
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+  console.log(session);
+  const checkoutSession = await stripe.checkout.sessions.create({
+    customer_email: session.user.email,
+    line_items: [
+      {
+        price: "price_1PvRLNE5yS7pWHMgBgM7guGA",
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `${process.env.CANONICAL_URL}/payment?success=true`,
+    cancel_url: `${process.env.CANONICAL_URL}/payment?cancelled=true`,
+  });
+
+  redirect(checkoutSession.url);
 }
