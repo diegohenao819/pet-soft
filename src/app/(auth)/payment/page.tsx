@@ -3,7 +3,11 @@ import { createCheckoutSession } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 
-const page = ({ searchParams }) => {
+const Page = ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) => {
   const [isPending, startTransition] = useTransition();
   return (
     <main className="flex justify-center flex-col text-center gap-2">
@@ -32,4 +36,4 @@ const page = ({ searchParams }) => {
   );
 };
 
-export default page;
+export default Page;
