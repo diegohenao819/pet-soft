@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   // fullfill order
   await prisma.user.update({
     where: {
-      email: data.data.object.customer.customer_email,
+      email: data.data.object.customer_email,
     },
     data: {
       hasAccess: true,
