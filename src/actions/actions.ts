@@ -3,11 +3,23 @@
 import { auth, signIn, signOut } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { authSchema, FormSchema, PetEssentials, ValidPetId } from "@/lib/types";
+import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 // User Actions
+
+export async function getUserByEmail(email: User["email"]) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+  return user;
+}
+
 export async function logIn(formData: unknown) {
   if (!(formData instanceof FormData)) {
     return "Invalid data";

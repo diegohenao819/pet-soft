@@ -1,6 +1,8 @@
 "use client";
 import { createCheckoutSession } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 const Page = ({
@@ -9,9 +11,23 @@ const Page = ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const [isPending, startTransition] = useTransition();
+  const { update } = useSession();
+  const router = useRouter();
+
   return (
     <main className="flex justify-center flex-col text-center gap-2">
       <h1>PetSoft requires a payment </h1>
+      {searchParams.success && (
+        <Button
+          onClick={async () => {
+            await update(true);
+            router.push("/app/dashboard");
+          }}
+        >
+          Access PetSoft
+        </Button>
+      )}
+
       {!searchParams.success && (
         <Button
           disabled={isPending}
