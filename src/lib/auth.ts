@@ -88,9 +88,8 @@ const config = {
       if (trigger === "update") {
         //on every request
         const userFromDb = await getUserByEmail(token.email);
-        if(userFromDb){
-          token.hasAccess = userFromDb.hasAccess
-
+        if (userFromDb) {
+          token.hasAccess = userFromDb.hasAccess;
         }
       }
       return token;
