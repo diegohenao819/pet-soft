@@ -31,7 +31,6 @@ const Page = ({
 
       {!searchParams.success && (
         <Button
-          disabled={isPending}
           onClick={async () => {
             await createCheckoutSession();
           }}
