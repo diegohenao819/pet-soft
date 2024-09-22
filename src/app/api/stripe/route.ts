@@ -23,6 +23,7 @@ export async function POST(request: Request) {
 
   switch (event.type) {
     case "checkout.session.completed":
+      console.log("Ya pagó maldita sea");
       await prisma.user.update({
         where: {
           email: event.data.object.customer_email,
@@ -34,11 +35,7 @@ export async function POST(request: Request) {
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
-  } 
-
-
-
- 
+  }
 
   return new Response(null, {
     status: 200,
@@ -46,3 +43,4 @@ export async function POST(request: Request) {
 }
 
 // STRIPE
+// werwe
