@@ -174,6 +174,8 @@ export async function deletePet(id: string) {
 // Payment Actions
 export async function createCheckoutSession() {
   // authentication check
+  
+
   const session = await auth();
   if (!session?.user) {
     redirect("/login");
@@ -191,6 +193,8 @@ export async function createCheckoutSession() {
     success_url: `${process.env.CANONICAL_URL}/payment?success=true`,
     cancel_url: `${process.env.CANONICAL_URL}/payment?cancelled=true`,
   });
+  console.log(checkoutSession.url);
+  // return checkoutSession.url;
 
   redirect(checkoutSession.url);
 }

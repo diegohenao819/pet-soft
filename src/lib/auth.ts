@@ -48,14 +48,14 @@ const config = {
   callbacks: {
     authorized: ({ auth, request }) => {
       // runs on every request to check if user is authorized
-      const isTryingToAccessApp = request.url.includes("/app");
-      const isLoggedIn = auth?.user;
+      const isLoggedIn = Boolean(auth?.user);
+      const isTryingToAccessApp = request.nextUrl.pathname.includes("/app");
 
       if (!isLoggedIn && isTryingToAccessApp) {
         return false;
       }
       if (isLoggedIn && isTryingToAccessApp && !auth?.user.hasAccess) {
-        return Response.redirect(new URL("/payment", request.url));
+        return Response.redirect(new URL("/payment", request.nextUrl));
       }
       if (isLoggedIn && isTryingToAccessApp && auth?.user.hasAccess) {
         return true;
@@ -67,7 +67,7 @@ const config = {
           request.nextUrl.pathname.includes("/signup")) &&
         auth?.user.hasAccess
       ) {
-        return Response.redirect(new URL("/app/dashboard", request.url));
+        return Response.redirect(new URL("/app/dashboard", request.nextUrl));
       }
 
       if (isLoggedIn && !isTryingToAccessApp && !auth?.user.hasAccess) {
@@ -75,7 +75,7 @@ const config = {
           request.nextUrl.pathname.includes("/login") ||
           request.nextUrl.pathname.includes("/signup")
         ) {
-          return Response.redirect(new URL("/payment", request.url));
+          return Response.redirect(new URL("/payment", request.nextUrl));
         }
 
         return true;

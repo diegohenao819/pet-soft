@@ -2,8 +2,8 @@
 import { createCheckoutSession } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect, useTransition } from "react";
 
 const Page = ({
   searchParams,
@@ -13,6 +13,13 @@ const Page = ({
   const [isPending, startTransition] = useTransition();
   const { data: session, update, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname === "/signup") {
+      router.push("/payment");
+    }
+  }, [pathname, router]);
 
   return (
     <main className="flex justify-center flex-col text-center gap-2">
@@ -29,10 +36,11 @@ const Page = ({
         </Button>
       )}
 
-      {!searchParams.success && (
+      {pathname !== "/signup" && !searchParams.success && (
         <Button
-          onClick={async () => {
-            await createCheckoutSession();
+          disabled={isPending}
+          onClick={() => {
+            createCheckoutSession();
           }}
         >
           Buy lifetime access for $299
